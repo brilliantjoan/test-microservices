@@ -1,0 +1,134 @@
+.nav {
+  background-color: #1A1A1A;
+  color: white;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.container {
+  padding-left: 15rem;
+  padding-right: 15rem;
+}
+
+.movie-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.movie-card-container {
+  width: 250px;
+  margin-right: 70px;
+  margin-bottom: 50px;
+}
+
+.movie-card-image {
+  width: 100%;
+  height: 350px;
+}
+
+.movie-card-favourite {
+  color: orange;
+  width: 15px;
+  height: 15px;
+}
+
+.movie-card-description {
+  background-color: #1A1A1A;
+}
+
+.movie-card-title {
+  height: 50px;
+  text-overflow: ellipsis;
+  color: white;
+}
+
+.movie-card-button {
+  background-color: #2e2d2d;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.movie-card-button.a {
+  text-decoration: none;
+}
+
+.detail-card-container {
+  width: 300px;
+  margin-right: 40px;
+  margin-bottom: 50px;
+}
+
+.detail-card-image {
+  width: 100%;
+  height: 450px;
+}
+
+.detail-card-content {
+  max-width: 1000px;
+}
+
+.detail-subtitle {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.login-body {
+  background-color: #b3b3b0;
+  color: black;
+  height: 85vh;
+  overflow: hidden;
+}
+
+.login-container {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
+
+.login-input {
+  width: 300px;
+}
+
+.login-card {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  padding: 30px;
+  margin-top: 50px;
+  margin-bottom: 75px;
+  width: 400px;
+}
+
+.profile-modal {
+  position: fixed;
+  width: 110px;
+}
+
+.modal-wrapper {
+  display: none;
+  position: fixed;
+  z-index: 300;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-container {
+  background-color: #fefefe;
+  margin: 15% auto;
+  width: fit-content;
+  color: black;
+  border-radius: 5px;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

@@ -1,0 +1,126 @@
+version: '3.7'
+
+services:
+  # imdb-client:
+  #   container_name: imdb-client
+  #   image: imdb-client
+  #   build:
+  #     context: ./imdb-client
+  #   ports:
+  #     - "3080:3080"
+  #   networks:
+  #     - imdb-network
+
+  movie:
+    image: imdb/mmv2-movie-service:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8100:8100"
+    networks:
+      - imdb-network
+    depends_on:
+      - naming-server
+      - rabbitmq
+      - postgres
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/imdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create
+
+  auth:
+    image: imdb/mmv2-auth-service:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8000:8000"
+    networks:
+      - imdb-network
+    depends_on:
+      - naming-server
+      - rabbitmq
+      - postgres
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/imdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create
+      SPRING_SECURITY_USER_NAME: username
+      SPRING_SECURITY_USER_PASSWORD: password
+
+  api-gateway:
+    image: imdb/mmv2-api-gateway:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8765:8765"
+    networks:
+      - imdb-network
+    depends_on:
+      - naming-server
+      - rabbitmq
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
+      ALLOW_CORS: "true"
+      CORS_ALLOW_ORIGIN: "*"
+
+  naming-server:
+    image: imdb/mmv2-naming-server:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8761:8761"
+    networks:
+      - imdb-network
+
+  zipkin-server:
+    image: openzipkin/zipkin:2.23
+    mem_limit: 300m
+    ports:
+      - "9411:9411"
+    networks:
+      - imdb-network
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+
+  rabbitmq:
+    image: rabbitmq:3.5.3-management
+    mem_limit: 300m
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - imdb-network
+
+  postgres:
+    # container_name: postgres
+    image: 'postgres:13-alpine'
+    # restart: always
+    environment:
+      PGDATA: /var/lib/postgresql/data/imdb/
+      POSTGRES_DB: imdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
+    networks:
+      - imdb-network
+
+networks:
+  imdb-network:
+
